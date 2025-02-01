@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Number Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #25D366;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #128C7E;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>WhatsApp Number Checker</h1>
+    <p>Enter a phone number with country code (e.g., +1234567890) to check if it's on WhatsApp.</p>
+
+    <input type="text" id="phoneNumber" placeholder="Enter phone number">
+    <button onclick="checkWhatsApp()">Check WhatsApp</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function checkWhatsApp() {
+            const phoneNumber = document.getElementById("phoneNumber").value.trim();
+            const resultDiv = document.getElementById("result");
+
+            // Clear any previous result
+            resultDiv.innerHTML = '';
+
+            if (!phoneNumber) {
+                resultDiv.innerHTML = "<p class='error'>Please enter a valid phone number.</p>";
+                return;
+            }
+
+            // Validate the phone number format (basic validation)
+            const regex = /^[+]?[0-9]{10,15}$/;
+            if (!regex.test(phoneNumber)) {
+                resultDiv.innerHTML = "<p class='error'>Please enter a valid phone number with country code.</p>";
+                return;
+            }
+
+            // WhatsApp link URL
+            const waUrl = `https://wa.me/${phoneNumber}`;
+
+            // Create an iframe to simulate the check
+            const iframe = document.createElement("iframe");
+            iframe.style.display = "none";  // Hide the iframe
+            iframe.src = waUrl;
+
+            // When the iframe loads successfully
+            iframe.onload = function () {
+                resultDiv.innerHTML = "<p class='success'>This phone number is on WhatsApp!</p>";
+            };
+
+            // If iframe cannot load (likely number is not on WhatsApp)
+            iframe.onerror = function () {
+                resultDiv.innerHTML = "<p class='error'>This phone number is not registered on WhatsApp.</p>";
+            };
+
+            // Append iframe to the body (hidden)
+            document.body.appendChild(iframe);
+        }
+    </script>
+</body>
+</html>
